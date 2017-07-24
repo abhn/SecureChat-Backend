@@ -4,7 +4,7 @@ const mongoPass = process.env.MONGO_PASS
 
 const mongo = {
   development: {
-    connectionString: 'mongodb://' + mongoUser + ':' + mongoPass + '@ds117913.mlab.com:17913/securechat'
+    connectionString: 'mongodb://' + mongoUser + ':' + mongoPass + '@ds027739.mlab.com:27739/securechat-test'
   },
   production: {
     // not now

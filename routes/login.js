@@ -3,7 +3,7 @@ const uuidv4 = require('uuid/v4')
 const bcrypt = require('bcrypt')
 
 function login (app) {
-  app.post('/api/login', function (req, res) {
+  app.post('/api/login', (req, res) => {
     const username = req.body.username
     const password = req.body.password
 
@@ -21,7 +21,7 @@ function login (app) {
 
         const hash = doc.password
 
-        bcrypt.compare(password, hash, function(err, doesMatch) {
+        bcrypt.compare(password, hash, (err, doesMatch) => {
           if(doesMatch) {
             const sessionId = uuidv4()
 
@@ -31,15 +31,20 @@ function login (app) {
               if (err) {
                 return res.status(500).json({message: 'Internal server error. Please try after some time.'})
               }
+
               res.status(200).json({token: sessionId})
             })
+
           } else {
             res.status(400).json({message: 'Bad username or password'})
           }
+
         })
+
       } else {
         res.status(400).json({message: 'Bad username or password'})
       }
+      
     })
     
   })
