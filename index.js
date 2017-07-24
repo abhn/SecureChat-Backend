@@ -1,8 +1,9 @@
 const express = require('express')
 const app = express()
-const http = require('http').Server(app)
+const http = require('https')
 const io = require('socket.io')(http)
 const bodyParser = require('body-parser')
+const fs = require('fs')
 
 
 // parse application/x-www-form-urlencoded
@@ -19,6 +20,18 @@ app.get('/', function (req, res) {
   res.json({error: "GET to / isn't supported"})
 })
 
-http.listen(1337, function () {
-  console.log('listening on *:3000')
-})
+if (app.get('env') == 'production') {
+	var options = {
+	  key: fs.readFileSync('/etc/letsencrypt/live/l-a.me/privkey.pem'),
+	  cert: fs.readFileSync('/etc/letsencrypt/live/l-a.me/fullchain.pem')
+	}
+	http.createServer(options, app).listen(1337, function() {
+		console.log( 'Express started in ' + app.get('env') +
+        ' mode; press Ctrl-C to terminate.' )
+	})
+} else {
+	http.createServer(app).listen(1337, function() {
+		console.log( 'Express started in ' + app.get('env') +
+        ' mode; press Ctrl-C to terminate.' )
+	})
+}
