@@ -23,17 +23,17 @@ app.get('/', function (req, res) {
 })
 
 if (app.get('env') == 'production') {
-	var options = {
-	  key: fs.readFileSync('/etc/letsencrypt/live/l-a.me/privkey.pem'),
-	  cert: fs.readFileSync('/etc/letsencrypt/live/l-a.me/fullchain.pem')
-	}
-	https.createServer(options, app).listen(1337, function() {
-		console.log( 'Express started in ' + app.get('env') +
+  var options = {
+    key: fs.readFileSync('/etc/letsencrypt/live/l-a.me/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/l-a.me/fullchain.pem')
+  }
+  https.createServer(options, app).listen(1337, function() {
+    console.log( 'Express started in ' + app.get('env') +
         ' mode; press Ctrl-C to terminate.' )
-	})
+  })
 } else {
-	http.createServer(app).listen(1337, function() {
-		console.log( 'Express started in ' + app.get('env') +
+  http.createServer(app).listen(1337, function() {
+    console.log( 'Express started in ' + app.get('env') +
         ' mode; press Ctrl-C to terminate.' )
-	})
+  })
 }
