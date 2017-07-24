@@ -1,0 +1,24 @@
+{
+  "name": "chat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "lint": "standard --fix || exit 0",
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.2",
+    "mongoose": "^4.11.3",
+    "socket.io": "^2.0.3",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.4.2",
+    "standard": "^10.0.2"
+  }
+}
