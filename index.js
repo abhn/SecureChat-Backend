@@ -1,7 +1,8 @@
 const express = require('express')
 const app = express()
-const http = require('https')
-const io = require('socket.io')(http)
+const http = require('http')
+const https = require('https')
+const io = require('socket.io')(https)
 const bodyParser = require('body-parser')
 const fs = require('fs')
 
@@ -25,7 +26,7 @@ if (app.get('env') == 'production') {
 	  key: fs.readFileSync('/etc/letsencrypt/live/l-a.me/privkey.pem'),
 	  cert: fs.readFileSync('/etc/letsencrypt/live/l-a.me/fullchain.pem')
 	}
-	http.createServer(options, app).listen(1337, function() {
+	https.createServer(options, app).listen(1337, function() {
 		console.log( 'Express started in ' + app.get('env') +
         ' mode; press Ctrl-C to terminate.' )
 	})
