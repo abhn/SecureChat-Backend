@@ -19,6 +19,6 @@ app.get('/', function (req, res) {
   res.json({error: "GET to / isn't supported"})
 })
 
-http.listen(3000, function () {
+http.listen(1337, function () {
   console.log('listening on *:3000')
 })
