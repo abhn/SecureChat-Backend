@@ -16,6 +16,7 @@ app.use(bodyParser.json())
 const creds = require('./models/creds.js')(app)
 const login = require('./routes/login.js')(app)
 const register = require('./routes/register.js')(app)
+const changePassword = require('./routes/changePassword.js')(app)
 
 app.get('/', function (req, res) {
   res.json({error: "GET to / isn't supported"})
