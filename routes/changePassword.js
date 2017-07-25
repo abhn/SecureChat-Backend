@@ -31,7 +31,7 @@ function login (app) {
           // login successful
       		if(doesMatch) {
 
-			      doc.currToken = ''
+			      doc.token = ''
 
             bcrypt.hash(newpassword, 5, (err, password) => {
               if (err) {

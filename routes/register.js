@@ -28,7 +28,7 @@ function register (app) {
           const newUser = new User({
             username,
             password,
-            currToken: '',
+            token: '',
             friends: []
           })
 

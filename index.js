@@ -2,7 +2,6 @@ const express = require('express')
 const app = express()
 const http = require('http')
 const https = require('https')
-const io = require('socket.io')(https)
 const bodyParser = require('body-parser')
 const fs = require('fs')
 
@@ -37,3 +36,5 @@ if (app.get('env') == 'production') {
         ' mode; press Ctrl-C to terminate.' )
   })
 }
+
+const chat = require('./routes/chat.js')(app)

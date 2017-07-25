@@ -3,12 +3,12 @@ var mongoose = require('mongoose')
 var userSchema = mongoose.Schema({
   username: String,
   password: String,
-  currToken: String,
+  token: String,
   friends: [String]
 })
 
 userSchema.methods.getCurrentToken = function () {
-  return (this.currToken || null)
+  return (this.token || null)
 }
 
 var User = mongoose.model('User', userSchema)

@@ -23,16 +23,16 @@ function login (app) {
 
         bcrypt.compare(password, hash, (err, doesMatch) => {
           if(doesMatch) {
-            const sessionId = uuidv4()
+            const newToken = uuidv4()
 
-            doc.currToken = sessionId
+            doc.token = newToken
 
             doc.save((err, a) => {
               if (err) {
                 return res.status(500).json({message: 'Internal server error. Please try after some time.'})
               }
 
-              res.status(200).json({token: sessionId})
+              res.status(200).json({token: newToken})
             })
 
           } else {
