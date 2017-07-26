@@ -5,6 +5,9 @@ const https = require('https')
 const bodyParser = require('body-parser')
 const fs = require('fs')
 
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -16,6 +19,7 @@ const creds = require('./models/creds.js')(app)
 const login = require('./routes/login.js')(app)
 const register = require('./routes/register.js')(app)
 const changePassword = require('./routes/changePassword.js')(app)
+const chat = require('./routes/chat.js')(app, io)
 
 app.get('/', function (req, res) {
   res.json({error: "GET to / isn't supported"})
@@ -37,4 +41,3 @@ if (app.get('env') == 'production') {
   })
 }
 
-const chat = require('./routes/chat.js')(app)

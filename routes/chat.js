@@ -1,3 +1,7 @@
+
+const User = require('../models/user.js')
+const userAuth = require('./userAuth.js')
+
 Object.prototype.getKeyByValue = function( value ) {
   for( var prop in this ) {
     if( this.hasOwnProperty( prop ) ) {
@@ -6,24 +10,14 @@ Object.prototype.getKeyByValue = function( value ) {
     }
   }
 }
-console.log('in file')
 
-function chat(app) {
-
-  console.log('in func')
-
-
-  const server = require('http').Server(app);
-  const io = require('socket.io')(server);
-
-  const User = require('../models/user.js')
-  const userAuth = require('./userAuth.js')
+function chat(app, io) {
 
   let userSocketList = {}
 
   io.on('connection', (client) => {
 
-console.log('in connection')
+    console.log('in connection')
 
     client.on('token', (token) => {
       try {
