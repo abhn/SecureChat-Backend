@@ -14,6 +14,7 @@ function login (app) {
     User.findOne({username}, (err, doc) => {
       // error on db
       if (err) {
+        console.log(err)
         return res.status(500).json({message: 'Internal server error. Please try after some time.'})
       }
       // user login ok

@@ -12,13 +12,15 @@ function chat(io) {
       chatUtils(client, message, onToken, onNewMessage, onError)
     })
 
-    client.on('close', () => {
-      if(getKeyByValue(client)) {
-        console.log(getKeyByValue(client) + ' disconnected')
-        delete userSocketList[getKeyByValue(client)]
-      }
-    })
+    client.on('close', onClose(client))
   })
+}
+
+function onClose(client) {
+  if(getKeyByValue(userSocketList, client)) {
+    console.log(getKeyByValue(userSocketList, client) + ' disconnected')
+    delete userSocketList[getKeyByValue(userSocketList, client)]
+  }
 }
 
 function onToken(client, token) {
@@ -26,6 +28,7 @@ function onToken(client, token) {
     const authorizedUser = userAuth(token)
   } catch (e) {
     console.log(e)
+    return
   }
 
   if (authorizedUser) {
@@ -57,15 +60,15 @@ function onNewMessage(client, data) {
 
 function onError(client) {
   if(getKeyByValue(client)) {
-    console.log(getKeyByValue(client) + ' disconnected')
-    delete userSocketList[getKeyByValue(client)]
+    console.log(getKeyByValue(userSocketList, client) + ' disconnected')
+    delete userSocketList[getKeyByValue(userSocketList, client)]
   }
 }
 
-Object.prototype.getKeyByValue = function( value ) {
-  for( var prop in this ) {
-    if( this.hasOwnProperty( prop ) ) {
-      if( this[ prop ] === value )
+function getKeyByValue(obj, value) {
+  for( var prop in obj ) {
+    if( obj.hasOwnProperty( prop ) ) {
+      if( obj[ prop ] === value )
         return prop;
     }
   }
