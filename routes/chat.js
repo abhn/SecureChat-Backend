@@ -22,20 +22,18 @@ function chat(io) {
 }
 
 function onToken(client, token) {
-  let authorizedUser
   try {
-    authorizedUser = userAuth(token)
+    userAuth(token, (authorizedUser) => {
+      if (authorizedUser) {
+        userSocketList[authorizedUser] = client
+        console.log(userSocketList)
+      } else {
+        client.send(JSON.stringify({"error": "not authorized"}))  
+      }
+    })
   } catch (e) {
     console.log(e)
     return
-  }
-
-  console.log("user: " + authorizedUser)
-  if (authorizedUser) {
-    userSocketList[authorizedUser] = client
-    console.log(userSocketList)
-  } else {
-    client.send(JSON.stringify({"error": "not authorized"}))  
   }
 }
 
@@ -46,20 +44,24 @@ function onNewMessage(client, data) {
   const token = data.token
   const message = data.message
 
-  if(userSocketList[username] && username === userAuth(token)) {
-    if(userSocketList[friend]) {
-      userSocketList[friend].send(JSON.stringify({"received message": message}))
+  userAuth(token, (authorizedUser) => {
+    if(userSocketList[username] && username === authorizedUser) {
+      if(userSocketList[friend]) {
+        userSocketList[friend].send(JSON.stringify({"received message": message}))
+      } else {
+        client.send(JSON.stringify({"no such user": friend}))
+      }
     } else {
-      client.send(JSON.stringify({"no such user": friend}))
+      // kick client
+      client.send(JSON.stringify({"error": "not authorized"}))
+      if(userSocketList[username]) {
+        delete userSocketList[username]
+      }
+      client.terminate()
     }
-  } else {
-    // kick client
-    client.send(JSON.stringify({"error": "not authorized"}))
-    if(userSocketList[username]) {
-      delete userSocketList[username]
-    }
-    client.terminate()
-  }
+  })
+
+  
 }
 
 function onError(client) {
