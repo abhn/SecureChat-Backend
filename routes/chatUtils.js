@@ -3,7 +3,7 @@ function chatUtils(client, message, newMessage, token, error) {
 	try {
 		const formattedMessage = JSON.parse(message)
 	} catch(e) {
-		console.log(e)
+		console.log("fishy" + e)
 		return null
 	}
 
