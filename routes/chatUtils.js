@@ -14,7 +14,7 @@ function chatUtils(client, message, newMessage, token, error) {
 			newMessage(client, data)
 			break
 		case "token":
-			token(client, data)
+			token(client, data.token)
 			break
 		default:
 			error(client)

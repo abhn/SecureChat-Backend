@@ -12,15 +12,13 @@ function chat(io) {
       chatUtils(client, message, onToken, onNewMessage, onError)
     })
 
-    client.on('close', onClose(client))
+    client.on('close', () => {
+      if(getKeyByValue(userSocketList, client)) {
+        console.log(getKeyByValue(userSocketList, client) + ' disconnected')
+        delete userSocketList[getKeyByValue(userSocketList, client)]
+      }
+    })
   })
-}
-
-function onClose(client) {
-  if(getKeyByValue(userSocketList, client)) {
-    console.log(getKeyByValue(userSocketList, client) + ' disconnected')
-    delete userSocketList[getKeyByValue(userSocketList, client)]
-  }
 }
 
 function onToken(client, token) {
