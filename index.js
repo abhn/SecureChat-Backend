@@ -5,8 +5,8 @@ const https = require('https')
 const bodyParser = require('body-parser')
 const fs = require('fs')
 
-const server = http.Server(app);
-const io = require('socket.io')(server);
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 7331 });
 
 
 // parse application/x-www-form-urlencoded
@@ -19,23 +19,11 @@ const creds = require('./models/creds.js')(app)
 const login = require('./routes/login.js')(app)
 const register = require('./routes/register.js')(app)
 const changePassword = require('./routes/changePassword.js')(app)
-// const chat = require('./routes/chat.js')(app, io)
+const chat = require('./routes/chat.js')(wss)
 
-app.get('/', function (req, res) {
-  res.json({error: "GET to / isn't supported"})
+app.get('*', function (req, res) {
+  res.json({error: "Not supported"})
 })
-
-io.on('connection', function (socket) {
-  console.log("connection")
-
-  socket.emit('hello')
-  
-  socket.on('disconnect', function () {
-
-    console.log('disconnect')
-
-  });
-});
 
 if (app.get('env') == 'production') {
   var options = {
@@ -52,7 +40,4 @@ if (app.get('env') == 'production') {
         ' mode; press Ctrl-C to terminate.' )
   })
 }
-
-
-
 
