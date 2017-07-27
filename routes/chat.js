@@ -37,7 +37,7 @@ function onToken(client, token) {
 }
 
 function onNewMessage(client, data) {
-  console.log("message " + data)
+  console.log("in message " + data)
   const username = data.username
   const friend = data.friend
   const token = data.token
@@ -60,7 +60,7 @@ function onNewMessage(client, data) {
 }
 
 function onError(client) {
-  if(getKeyByValue(client)) {
+  if(getKeyByValue(userSocketList, client)) {
     console.log(getKeyByValue(userSocketList, client) + ' disconnected')
     delete userSocketList[getKeyByValue(userSocketList, client)]
   }
