@@ -33,6 +33,8 @@ function onToken(client, token) {
   if (authorizedUser) {
     userSocketList[authorizedUser] = client
     console.log(userSocketList)
+  } else {
+    client.send(JSON.stringify({"error": "not authorized"}))  
   }
 }
 
