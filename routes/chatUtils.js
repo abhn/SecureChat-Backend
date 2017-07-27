@@ -11,7 +11,7 @@ function chatUtils(client, message, newMessage, token, error) {
 	const op = formattedMessage.op
 	const data = formattedMessage.data
 
-	console.log(data)
+	console.log(op)
 
 	switch(op) {
 		case "new message":
@@ -19,7 +19,7 @@ function chatUtils(client, message, newMessage, token, error) {
 			newMessage(client, data)
 			break
 		case "token":
-			console.log('new message case')
+			console.log('token case')
 			token(client, data.token)
 			break
 		default:
