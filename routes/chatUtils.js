@@ -11,7 +11,7 @@ function chatUtils(client, message, newMessage, token, error) {
 	const op = formattedMessage.op
 	const data = formattedMessage.data
 
-	console.log("break point 1" + op + " " + data)
+	console.log(data)
 
 	switch(op) {
 		case "new message":
