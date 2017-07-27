@@ -1,5 +1,5 @@
 function chatUtils(client, message, newMessage, token, error) {
-
+	console.log("chatutils" + message)
 	try {
 		const formattedMessage = JSON.parse(message)
 	} catch(e) {
