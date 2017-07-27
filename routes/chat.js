@@ -9,7 +9,6 @@ function chat(io) {
   io.on('connection', (client) => {
 
     client.on('message', (message) => {
-      console.log(message)
       chatUtils(client, message, onToken, onNewMessage, onError)
     })
 

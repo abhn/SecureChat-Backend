@@ -1,5 +1,4 @@
 function chatUtils(client, message, newMessage, token, error) {
-	console.log("chatutils" + message)
 	let formattedMessage
 	try {
 		formattedMessage = JSON.parse(message)
@@ -8,12 +7,11 @@ function chatUtils(client, message, newMessage, token, error) {
 		return null
 	}
 
-	console.log(formattedMessage)
 
 	const op = formattedMessage.op
 	const data = formattedMessage.data
 
-	console.log(op + " " + data)
+	console.log("break point 1" + op + " " + data)
 
 	switch(op) {
 		case "new message":
