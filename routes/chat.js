@@ -30,6 +30,7 @@ function onToken(client, token) {
     return
   }
 
+  console.log("user: " + authorizedUser)
   if (authorizedUser) {
     userSocketList[authorizedUser] = client
     console.log(userSocketList)
