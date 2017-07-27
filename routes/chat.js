@@ -56,7 +56,7 @@ function onNewMessage(client, data) {
     if(userSocketList[username]) {
       delete userSocketList[username]
     }
-    client.disconnect()
+    client.terminate()
   }
 }
 
