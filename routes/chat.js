@@ -9,6 +9,7 @@ function chat(io) {
   io.on('connection', (client) => {
 
     client.on('message', (message) => {
+      // our little mini router
       chatUtils(client, message, onToken, onNewMessage, onError)
     })
 
@@ -26,7 +27,6 @@ function onToken(client, token) {
     userAuth(token, (authorizedUser) => {
       if (authorizedUser) {
         userSocketList[authorizedUser] = client
-        console.log(userSocketList)
       } else {
         client.send(JSON.stringify({"error": "not authorized"}))  
       }
@@ -38,7 +38,6 @@ function onToken(client, token) {
 }
 
 function onNewMessage(client, data) {
-  console.log("in message " + data)
   const username = data.username
   const friend = data.friend
   const token = data.token
@@ -60,8 +59,6 @@ function onNewMessage(client, data) {
       client.terminate()
     }
   })
-
-  
 }
 
 function onError(client) {

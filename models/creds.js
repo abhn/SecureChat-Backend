@@ -26,7 +26,7 @@ module.exports = function (app) {
       mongoose.connect(mongo.development.connectionString, opts)
       break
     case 'production':
-      mongoose.connect(mongo.development.connectionString, opts)
+      mongoose.connect(mongo.production.connectionString, opts)
       break
     default:
       throw new Error('Unknown execution environment: ' + app.get('env'))
