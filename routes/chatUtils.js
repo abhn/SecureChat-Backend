@@ -1,4 +1,4 @@
-function chatUtils(client, message, newMessage, token, error) {
+function chatUtils(client, message, token, newMessage, error) {
 	let formattedMessage
 	try {
 		formattedMessage = JSON.parse(message)
