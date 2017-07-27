@@ -32,7 +32,7 @@ function onToken(client, token) {
 
   if (authorizedUser) {
     userSocketList[authorizedUser] = client
-    console.log(Object.keys(userSocketList))
+    console.log(userSocketList)
   }
 }
 
