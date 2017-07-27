@@ -9,6 +9,7 @@ function chat(io) {
   io.on('connection', (client) => {
 
     client.on('message', (message) => {
+      console.log(message)
       chatUtils(client, message, onToken, onNewMessage, onError)
     })
 
@@ -22,6 +23,7 @@ function chat(io) {
 }
 
 function onToken(client, token) {
+  console.log("token " + token)
   try {
     const authorizedUser = userAuth(token)
   } catch (e) {
@@ -36,6 +38,7 @@ function onToken(client, token) {
 }
 
 function onNewMessage(client, data) {
+  console.log("message " + data)
   const username = data.username
   const friend = data.friend
   const token = data.token
