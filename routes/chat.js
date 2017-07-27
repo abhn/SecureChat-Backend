@@ -22,9 +22,9 @@ function chat(io) {
 }
 
 function onToken(client, token) {
-  console.log("token " + token)
+  let authorizedUser
   try {
-    const authorizedUser = userAuth(token)
+    authorizedUser = userAuth(token)
   } catch (e) {
     console.log(e)
     return
