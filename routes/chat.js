@@ -10,6 +10,7 @@ function chat(io) {
 
     client.on('message', (message) => {
       // our little mini router
+      console.log(message)
       chatUtils(client, message, onToken, onNewMessage, onError)
     })
 
@@ -27,6 +28,7 @@ function onToken(client, token) {
     userAuth(token, (authorizedUser) => {
       if (authorizedUser) {
         userSocketList[authorizedUser] = client
+        console.log(authorizedUser + " connected")
       } else {
         client.send(JSON.stringify({"error": "not authorized"}))  
       }
