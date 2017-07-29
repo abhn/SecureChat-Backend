@@ -47,11 +47,11 @@ function login (app) {
               })
             })
       		} else {
-      			res.status(400).json({message: 'Bad username or password'})
+      			res.status(401).json({message: 'Bad username or password'})
       		}
       	})
       } else {
-      	res.status(400).json({message: 'Bad username or password'})
+      	res.status(401).json({message: 'Bad username or password'})
       }
     })
     

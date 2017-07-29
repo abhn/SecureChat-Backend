@@ -37,13 +37,13 @@ function login (app) {
             })
 
           } else {
-            return res.status(400).json({message: 'Bad username or password'})
+            return res.status(401).json({message: 'Bad username or password'})
           }
 
         })
 
       } else {
-        return res.status(400).json({message: 'Bad username or password'})
+        return res.status(401).json({message: 'Bad username or password'})
       }
       
     })
