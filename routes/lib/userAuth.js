@@ -1,4 +1,4 @@
-const User = require('../models/user.js')
+const User = require('../../models/user.js')
 
 function userAuth(token, cb) {
 	if (!token) {
@@ -9,14 +9,12 @@ function userAuth(token, cb) {
 		if (err) {
 			throw new Error('Internal server error')
 		}
-
-		if(doc) {
+		if (doc) {
 			cb(doc.username)
 		} else {
 			console.log('not found')
-			return null
+			cb(null)
 		}
-
 	})
 }
 

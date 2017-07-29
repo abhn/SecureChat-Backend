@@ -1,17 +1,16 @@
-const User = require('../models/user.js')
-const userAuth = require('./userAuth.js')
+const User = require('../../models/user.js')
+const userAuth = require('./../lib/userAuth.js')
 const chatUtils = require('./chatUtils.js')
+const getKeyByValue = require('../lib/getKeyByValue.js')
 
 let userSocketList = {}
 
 function chat(io) {
-
   io.on('connection', (client) => {
-
     client.on('message', (message) => {
       // our little mini router
       console.log(message)
-      chatUtils(client, message, onToken, onNewMessage, onError)
+      chatUtils(client, message, onToken, onNewMessage, onError, userSocketList)
     })
 
     client.on('close', () => {
@@ -23,7 +22,14 @@ function chat(io) {
   })
 }
 
-function onToken(client, token) {
+function onError(client) {
+  if(getKeyByValue(userSocketList, client)) {
+    console.log(getKeyByValue(userSocketList, client) + ' disconnected')
+    delete userSocketList[getKeyByValue(userSocketList, client)]
+  }
+}
+
+function onToken(client, token, userSocketList) {
   try {
     userAuth(token, (authorizedUser) => {
       if (authorizedUser) {
@@ -35,11 +41,11 @@ function onToken(client, token) {
     })
   } catch (e) {
     console.log(e)
-    return
+    client.send(JSON.stringify({"error": "Internal server error"}))  
   }
 }
 
-function onNewMessage(client, data) {
+function onNewMessage(client, data, userSocketList) {
   const username = data.username
   const friend = data.friend
   const token = data.token
@@ -61,22 +67,6 @@ function onNewMessage(client, data) {
       client.terminate()
     }
   })
-}
-
-function onError(client) {
-  if(getKeyByValue(userSocketList, client)) {
-    console.log(getKeyByValue(userSocketList, client) + ' disconnected')
-    delete userSocketList[getKeyByValue(userSocketList, client)]
-  }
-}
-
-function getKeyByValue(obj, value) {
-  for( var prop in obj ) {
-    if( obj.hasOwnProperty( prop ) ) {
-      if( obj[ prop ] === value )
-        return prop;
-    }
-  }
 }
 
 module.exports = chat

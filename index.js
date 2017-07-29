@@ -8,7 +8,6 @@ const fs = require('fs')
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 7331 });
 
-
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -19,7 +18,8 @@ const creds = require('./models/creds.js')(app)
 const login = require('./routes/login.js')(app)
 const register = require('./routes/register.js')(app)
 const changePassword = require('./routes/changePassword.js')(app)
-const chat = require('./routes/chat.js')(wss)
+const blockUser = require('./routes/blockUser.js')(app)
+const chat = require('./routes/chatSocket/chat.js')(wss)
 
 app.get('*', function (req, res) {
   res.json({error: "Not supported"})

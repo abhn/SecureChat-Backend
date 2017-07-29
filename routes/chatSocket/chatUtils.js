@@ -1,4 +1,4 @@
-function chatUtils(client, message, token, newMessage, error) {
+function chatUtils(client, message, token, newMessage, error, userSocketList) {
 	let formattedMessage
 	try {
 		formattedMessage = JSON.parse(message)
@@ -11,10 +11,10 @@ function chatUtils(client, message, token, newMessage, error) {
 
 	switch(op) {
 		case "new message":
-			newMessage(client, data)
+			newMessage(client, data, userSocketList)
 			break
 		case "token":
-			token(client, data.token)
+			token(client, data.token, userSocketList)
 			break
 		default:
 			error(client)

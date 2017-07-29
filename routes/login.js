@@ -33,17 +33,17 @@ function login (app) {
                 return res.status(500).json({message: 'Internal server error. Please try after some time.'})
               }
 
-              res.status(200).json({token: newToken})
+              return res.status(200).json({token: newToken})
             })
 
           } else {
-            res.status(400).json({message: 'Bad username or password'})
+            return res.status(400).json({message: 'Bad username or password'})
           }
 
         })
 
       } else {
-        res.status(400).json({message: 'Bad username or password'})
+        return res.status(400).json({message: 'Bad username or password'})
       }
       
     })
