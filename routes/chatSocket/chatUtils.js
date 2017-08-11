@@ -1,4 +1,4 @@
-function chatUtils(client, message, token, newMessage, error, userSocketList, connectInt) {
+function chatUtils(client, message, token, newMessage, error, userSocketList, connectInt, connectAck) {
 	let formattedMessage
 	try {
 		formattedMessage = JSON.parse(message)
@@ -18,6 +18,10 @@ function chatUtils(client, message, token, newMessage, error, userSocketList, co
 			break
 		case "connect":
 			connectInt(client, data.username, data.token, data.friend)
+			break
+		case "connect confirm":
+			connectAck(client, data.username, data.token, data.friend, data.reply)
+			break
 		default:
 			error(client)
 			break

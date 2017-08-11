@@ -11,7 +11,7 @@ function chat(io) {
     client.on('message', (message) => {
       // our little mini router
       console.log(message)
-      chatUtils(client, message, onToken, onNewMessage, onError, userSocketList, connectInt)
+      chatUtils(client, message, onToken, onNewMessage, onError, userSocketList, connectInt, connectAck)
     })
 
     client.on('close', () => {
@@ -98,8 +98,10 @@ function connectInt(client, username, token, friend) {
               // friend is free
               doc.remove()
               initNewChatReq(username, friend, 1, (new Date()).getTime())
-              userSocketList[friend].send(JSON.stringify({"connect": username}))
-            }
+              userSocketList[friend].send(JSON.stringify({
+                "res": "connect",
+                "data": username
+              }))            }
 
             else if(doc.pending === 1 && doc.initiated + 3600000 > (new Date()).getTime()) {
               // friend is waiting 
@@ -113,7 +115,10 @@ function connectInt(client, username, token, friend) {
           else {
             // no doc, first time chat, friend free
             initNewChatReq(username, friend, 1, (new Date()).getTime())
-            userSocketList[friend].send(JSON.stringify({"connect": username}))
+            userSocketList[friend].send(JSON.stringify({
+              "res": "connect",
+              "data": username
+            }))
           }
         })
 
