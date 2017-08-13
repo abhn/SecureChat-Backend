@@ -168,7 +168,7 @@ function connectInt(client, username, token, friend) {
 
 function connectAck(client, username, token, friend, reply) {
 
-  console.log('connect ack: ' + username + ':' + friend + ':' reply)
+  console.log('connect ack: ' + username + ':' + friend + ':' + reply)
 
   userAuth(token, (authorizedUser) => {
     if(userSocketList[username] && authorizedUser === username) {
