@@ -3,6 +3,7 @@ const Chat = require('../../models/chat.js')
 const userAuth = require('./../lib/userAuth.js')
 const chatUtils = require('./chatUtils.js')
 const getKeyByValue = require('../lib/getKeyByValue.js')
+const isUserBlocked = require('./isUserBlocked.js')
 
 let userSocketList = {}
 
@@ -14,7 +15,7 @@ function chat(io) {
     client.on('message', (message) => {
       // our little mini router
       console.log(message)
-      chatUtils(client, message, onToken, onNewMessage, onError, userSocketList, connectInt, connectAck)
+      chatUtils(client, message, onToken, onNewMessage, onError, userSocketList, connectInt, connectAck, leaveChat)
     })
 
     client.on('close', () => {
@@ -61,7 +62,6 @@ function onError(client) {
 }
 
 function onToken(client, token, userSocketList) {
-  console.log('token')
   try {
     userAuth(token, (authorizedUser) => {
       if (authorizedUser) {
@@ -86,6 +86,8 @@ function onNewMessage(client, data, userSocketList) {
   const friend = data.friend
   const token = data.token
   const message = data.message
+
+
 
   console.log('new message -->')
   console.log(data)
@@ -279,6 +281,25 @@ function leaveChat(client, username, token, friend) {
     if(userSocketList[username] && authorizedUser === username) {
       console.log(username + ' left chat')
       // implement leave
+      Chat.findOne({$or: [
+        {username1: friend}, 
+        {username2: friend}
+      ]})
+      .exec((err, doc) => {
+        if(err) {
+          client.send(JSON.stringify({
+            'res': 'internal server error'
+          }))
+          return
+        }
+        console.log('leaving...')
+        console.log(doc)
+        doc.remove()
+        userSocketList[friend].send(JSON.stringify({
+          'res': 'friend left chat',
+          'data': username
+        }))
+      })
     }
   })
 }
