@@ -7,7 +7,7 @@ function userAuth(token, cb) {
 
 	User.findOne({token}, (err, doc) => {
 		if (err) {
-			throw new Error('Internal server error')
+			console.log('Internal server error')
 		}
 		if (doc) {
 			cb(doc.username)

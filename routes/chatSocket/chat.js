@@ -47,14 +47,14 @@ function onToken(client, token, userSocketList) {
         console.log(authorizedUser + " connected")
       } else {
         client.send(JSON.stringify({
-          "error": "not authorized"
+          'res': 'username-token mismatch'
         }))  
       }
     })
   } catch (e) {
     console.log(e)
     client.send(JSON.stringify({
-      "error": "Internal server error"
+      'res': 'internal server error'
     }))  
   }
 }
@@ -72,19 +72,19 @@ function onNewMessage(client, data, userSocketList) {
     if(userSocketList[username] && username === authorizedUser) {
       if(userSocketList[friend]) {
         userSocketList[friend].send(JSON.stringify({
-          "res": "received message",
-          "data": message
+          'res': 'received message',
+          'data': message
         }))
       } else {
         client.send(JSON.stringify({
-          "res": "no such user",
-          "data": friend
+          'res': 'no such user',
+          'data': friend
         }))
       }
     } else {
       // kick client
       client.send(JSON.stringify({
-        "error": "not authorized"
+        'res': 'username-token mismatch'
       }))
       if(userSocketList[username]) {
         delete userSocketList[username]
@@ -108,8 +108,7 @@ function connectInt(client, username, token, friend) {
         .exec((err, doc) => {
           if(err) {
             client.send(JSON.stringify({
-              "res": "error",
-              "data": "server error"
+              'res': 'internal server error'
             }))
             return
           }
@@ -166,8 +165,7 @@ function connectInt(client, username, token, friend) {
     else {
       // auth failed
       client.send(JSON.stringify({
-        'res': 'error',
-        'message': 'auth failed'
+        'res': 'username-token mismatch',
       }))
     }
   })
@@ -190,8 +188,7 @@ function connectAck(client, username, token, friend, reply) {
             .exec((err, doc) => {
               if(err) {
                 client.send(JSON.stringify({
-                  "res": "error",
-                  "data": "server error"
+                  'res': 'internal server error'
                 }))
                 return
               }
@@ -199,14 +196,13 @@ function connectAck(client, username, token, friend, reply) {
               doc.save((err, a) => {
                 if (err) {
                   client.send(JSON.stringify({
-                    "res": "error",
-                    "data": "failed"
+                    'res': 'internal server error'
                   }))
                 }
                 else {
                   userSocketList[friend].send(JSON.stringify({
-                    "res": "connect confirm",
-                    "data": friend
+                    'res': 'connect confirm',
+                    'data': friend
                   }))
                 }
               })
@@ -220,26 +216,37 @@ function connectAck(client, username, token, friend, reply) {
             ]})
             .exec((err, doc) => {
               if(err) {
-                client.send(JSON.stringify({"error": "Internal server error"}))
+                client.send(JSON.stringify({
+                  "res": "internal server error"
+                }))
                 return
               }
               doc.remove()
-              client.send(JSON.stringify({"message": "successfully rejected"}))
+              client.send(JSON.stringify({
+                "res": "connect confirm rejected"
+              }))
             })
           break
 
           default:
-            client.send(JSON.stringify({"error": "invalid option"}))
-
+            client.send(JSON.stringify({
+              'res': 'invalid'option'
+            }))
+          break
         }
       } 
       else {
-        client.send(JSON.stringify({"no such user": friend}))
+        client.send(JSON.stringify({
+          'res': 'no such user',
+          'data': friend
+        }))
       }
     }
     else {
       // auth failed
-      client.send(JSON.stringify({"message": "auth failed"}))
+      client.send(JSON.stringify({
+        'res': 'username-token mismatch'
+      }))
     }
   })
 }
@@ -262,10 +269,9 @@ function initNewChatReq(username, friend, pending, initiated) {
   })
   newChat.save((err, a) => {
     if (err) {
-      client.send(JSON.stringify({"message": "failed"}))
-    }
-    else {
-      client.send(JSON.stringify({"message": "success"}))
+      client.send(JSON.stringify({
+        'res': 'internal server error'
+      }))
     }
   })
 }
