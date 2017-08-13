@@ -108,7 +108,8 @@ function connectInt(client, username, token, friend) {
         .exec((err, doc) => {
           if(err) {
             client.send(JSON.stringify({
-              "error": "Internal server error"
+              "res": "error",
+              "data": "server error"
             }))
             return
           }
@@ -121,8 +122,8 @@ function connectInt(client, username, token, friend) {
               doc.remove()
               initNewChatReq(username, friend, 1, (new Date()).getTime())
               userSocketList[friend].send(JSON.stringify({
-                "res": "connect",
-                "data": username
+                'res': 'connect',
+                'data': username
               }))            
             }
 
@@ -148,20 +149,26 @@ function connectInt(client, username, token, friend) {
             console.log('first time connect request')
             initNewChatReq(username, friend, 1, (new Date()).getTime())
             userSocketList[friend].send(JSON.stringify({
-              "res": "connect",
-              "data": username
+              'res': 'connect',
+              'data': username
             }))
           }
         })
 
       } 
       else {
-        client.send(JSON.stringify({"no such user": friend}))
+        client.send(JSON.stringify({
+          'res': 'no such user',
+          'data':friend
+        }))
       }
     }
     else {
       // auth failed
-      client.send(JSON.stringify({"message": "auth failed"}))
+      client.send(JSON.stringify({
+        'res': 'error',
+        'message': 'auth failed'
+      }))
     }
   })
 }
@@ -182,16 +189,25 @@ function connectAck(client, username, token, friend, reply) {
             ]})
             .exec((err, doc) => {
               if(err) {
-                client.send(JSON.stringify({"error": "Internal server error"}))
+                client.send(JSON.stringify({
+                  "res": "error",
+                  "data": "server error"
+                }))
                 return
               }
               doc.pending = 0
               doc.save((err, a) => {
                 if (err) {
-                  client.send(JSON.stringify({"message": "failed"}))
+                  client.send(JSON.stringify({
+                    "res": "error",
+                    "data": "failed"
+                  }))
                 }
                 else {
-                  client.send(JSON.stringify({"message": "successfully connected"}))
+                  client.send(JSON.stringify({
+                    "res": "success",
+                    "data": "created"
+                  }))
                 }
               })
             })
