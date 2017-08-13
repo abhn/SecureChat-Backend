@@ -8,6 +8,9 @@ let userSocketList = {}
 
 function chat(io) {
   io.on('connection', (client) => {
+
+    console.log('new client connected')
+    
     client.on('message', (message) => {
       // our little mini router
       console.log(message)
@@ -15,6 +18,9 @@ function chat(io) {
     })
 
     client.on('close', () => {
+
+      console.log('client disconnected')
+
       if(getKeyByValue(userSocketList, client)) {
         console.log(getKeyByValue(userSocketList, client) + ' disconnected')
         delete userSocketList[getKeyByValue(userSocketList, client)]
@@ -24,25 +30,32 @@ function chat(io) {
 }
 
 function onError(client) {
+
+  console.log('onerror')
+  
   if(getKeyByValue(userSocketList, client)) {
-    console.log(getKeyByValue(userSocketList, client) + ' disconnected')
     delete userSocketList[getKeyByValue(userSocketList, client)]
   }
 }
 
 function onToken(client, token, userSocketList) {
+  console.log('token')
   try {
     userAuth(token, (authorizedUser) => {
       if (authorizedUser) {
         userSocketList[authorizedUser] = client
         console.log(authorizedUser + " connected")
       } else {
-        client.send(JSON.stringify({"error": "not authorized"}))  
+        client.send(JSON.stringify({
+          "error": "not authorized"
+        }))  
       }
     })
   } catch (e) {
     console.log(e)
-    client.send(JSON.stringify({"error": "Internal server error"}))  
+    client.send(JSON.stringify({
+      "error": "Internal server error"
+    }))  
   }
 }
 
@@ -51,6 +64,9 @@ function onNewMessage(client, data, userSocketList) {
   const friend = data.friend
   const token = data.token
   const message = data.message
+
+  console.log('new message -->')
+  console.log(data)
 
   userAuth(token, (authorizedUser) => {
     if(userSocketList[username] && username === authorizedUser) {
@@ -67,7 +83,9 @@ function onNewMessage(client, data, userSocketList) {
       }
     } else {
       // kick client
-      client.send(JSON.stringify({"error": "not authorized"}))
+      client.send(JSON.stringify({
+        "error": "not authorized"
+      }))
       if(userSocketList[username]) {
         delete userSocketList[username]
       }
@@ -77,6 +95,7 @@ function onNewMessage(client, data, userSocketList) {
 }
 
 function connectInt(client, username, token, friend) {
+  console.log('connect: ' + username + ':' + friend)
   userAuth(token, (authorizedUser) => {
     if(userSocketList[username] && authorizedUser === username) {
       if(userSocketList[friend]) {
@@ -88,7 +107,9 @@ function connectInt(client, username, token, friend) {
         ]})
         .exec((err, doc) => {
           if(err) {
-            client.send(JSON.stringify({"error": "Internal server error"}))
+            client.send(JSON.stringify({
+              "error": "Internal server error"
+            }))
             return
           }
 
@@ -96,24 +117,33 @@ function connectInt(client, username, token, friend) {
             // check if the request is never answered
             if(doc.pending === 1 && doc.initiated + 3600000 < (new Date()).getTime()) {
               // friend is free
+              console.log('friend free')
               doc.remove()
               initNewChatReq(username, friend, 1, (new Date()).getTime())
               userSocketList[friend].send(JSON.stringify({
                 "res": "connect",
                 "data": username
-              }))            }
+              }))            
+            }
 
             else if(doc.pending === 1 && doc.initiated + 3600000 > (new Date()).getTime()) {
               // friend is waiting 
-              client.send(JSON.stringify({"message": "client busy"}))
+              console.log('friend waiting')
+              client.send(JSON.stringify({
+                "message": "client busy"
+              }))
             }
             else if(doc.pending === 0) {
               // friend is chatting
-              client.send(JSON.stringify({"message": "client busy"}))
+              console.log('friend chatting')
+              client.send(JSON.stringify({
+                "message": "client busy"
+              }))
             }
           }
           else {
             // no doc, first time chat, friend free
+            console.log('first time connect request')
             initNewChatReq(username, friend, 1, (new Date()).getTime())
             userSocketList[friend].send(JSON.stringify({
               "res": "connect",
@@ -135,6 +165,9 @@ function connectInt(client, username, token, friend) {
 }
 
 function connectAck(client, username, token, friend, reply) {
+
+  console.log('connect ack: ' + username + ':' + friend + ':' reply)
+
   userAuth(token, (authorizedUser) => {
     if(userSocketList[username] && authorizedUser === username) {
       if(userSocketList[friend]) {
@@ -189,6 +222,15 @@ function connectAck(client, username, token, friend, reply) {
     else {
       // auth failed
       client.send(JSON.stringify({"message": "auth failed"}))
+    }
+  })
+}
+
+function leaveChat(client, username, token, friend) {
+  userAuth(token, (authorizedUser) => {
+    if(userSocketList[username] && authorizedUser === username) {
+      console.log(username + ' left chat')
+      // implement leave
     }
   })
 }
