@@ -204,9 +204,9 @@ function connectAck(client, username, token, friend, reply) {
                   }))
                 }
                 else {
-                  client.send(JSON.stringify({
-                    "res": "success",
-                    "data": "created"
+                  userSocketList[friend].send(JSON.stringify({
+                    "res": "connect confirm",
+                    "data": friend
                   }))
                 }
               })
