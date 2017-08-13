@@ -239,13 +239,14 @@ function connectAck(client, username, token, friend, reply) {
             .exec((err, doc) => {
               if(err) {
                 client.send(JSON.stringify({
-                  "res": "internal server error"
+                  'res': 'internal server error'
                 }))
                 return
               }
               doc.remove()
               userSocketList[friend].send(JSON.stringify({
-                "res": "connect confirm rejected"
+                'res': 'connect confirm rejected',
+                'data': username
               }))
             })
           break
