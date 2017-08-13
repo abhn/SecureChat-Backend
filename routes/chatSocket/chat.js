@@ -202,7 +202,7 @@ function connectAck(client, username, token, friend, reply) {
                 else {
                   userSocketList[friend].send(JSON.stringify({
                     'res': 'connect confirm',
-                    'data': friend
+                    'data': username
                   }))
                 }
               })
