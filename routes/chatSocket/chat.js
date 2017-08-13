@@ -130,14 +130,16 @@ function connectInt(client, username, token, friend) {
               // friend is waiting 
               console.log('friend waiting')
               client.send(JSON.stringify({
-                "message": "client busy"
+                'res': 'client busy',
+                'data': friend
               }))
             }
             else if(doc.pending === 0) {
               // friend is chatting
               console.log('friend chatting')
               client.send(JSON.stringify({
-                "message": "client busy"
+                'res': 'client busy',
+                'data': friend
               }))
             }
           }
