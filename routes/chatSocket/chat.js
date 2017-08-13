@@ -230,7 +230,7 @@ function connectAck(client, username, token, friend, reply) {
 
           default:
             client.send(JSON.stringify({
-              'res': 'invalid'option'
+              'res': 'invalid option'
             }))
           break
         }
