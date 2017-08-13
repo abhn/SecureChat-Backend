@@ -23,6 +23,28 @@ function chat(io) {
 
       if(getKeyByValue(userSocketList, client)) {
         console.log(getKeyByValue(userSocketList, client) + ' disconnected')
+
+        let clientUser = getKeyByValue(userSocketList, client)
+
+        Chat.findOne({$or: [
+          {username1: clientUser}, 
+          {username2: clientUser}
+        ]})
+        .exec((err, doc) => {
+          if(err) {
+            client.send(JSON.stringify({
+              'res': 'internal server error'
+            }))
+            return
+          }
+
+          if(doc) {
+            console.log('removing...')
+            console.log(doc)
+            doc.remove()
+          }
+        })      
+
         delete userSocketList[getKeyByValue(userSocketList, client)]
       }
     })
