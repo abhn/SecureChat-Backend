@@ -244,7 +244,7 @@ function connectAck(client, username, token, friend, reply) {
                 return
               }
               doc.remove()
-              client.send(JSON.stringify({
+              userSocketList[friend].send(JSON.stringify({
                 "res": "connect confirm rejected"
               }))
             })
